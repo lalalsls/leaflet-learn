@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+          integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+            integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+            crossorigin="">
+    </script>
+    <style>
+        /*通用样式,支持手机和电脑*/
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        html, body, #mapid {
+            height: 100%;
+            width: 100vw;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="mapid"></div>
+
+<script>
+    //声明地图组件
+    var mymap = L.map(
+        'mapid' //绑定的页面div id
+    ).setView(
+        [38.942454, 117.85738] //起始点
+        ,13 //地图层级
+    );
+
+    //调用底图,这里用的官网的示例
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        attribution: 'XXX的地图',//这是一个地图foot信息
+        maxZoom: 18,//最大缩放层级
+        id: 'mapbox.streets',//填充到上面地址中的信息
+        accessToken: 'pk.eyJ1Ijoia2FuZXdhbmciLCJhIjoiY2pwM2UxNHNkMGF1MzNwc2FtMnNhdXJsMCJ9.KZpCBtizDeltZO6JhGc6_w'//填充到上面地址中的信息
+    }).addTo(mymap);
+
+    //这个是做一个标注
+    var marker = L.marker([38.942454, 117.85738]).addTo(mymap);
+    var marker2 = L.marker([38.042454, 117.95738]).addTo(mymap);
+    var marker3 = L.marker([38.232454, 117.47738]).addTo(mymap);
+
+
+    var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+    //这边是自定义的标注
+    var LeafIcon = L.Icon.extend({
+        options: {
+            shadowUrl: 'leaf-shadow.png',
+            iconSize: [38, 95],
+            shadowSize: [50, 64],
+            iconAnchor: [22, 94],
+            shadowAnchor: [4, 62],
+            popupAnchor: [-3, -76]
+        }
+    });
+
+    //这个是声明一个leaflet本身的气泡
+    var mypop = L.popup();
+
+    //这个是监听点击事件
+    mymap.on('click', function (e) {
+        var content = '这个点坐标：<br>';
+        content += e.latlng.toString();
+        mypop.setLatLng(e.latlng)
+            .setContent(content)
+            .openOn(mymap);
+    });
+    //这个是监听点击事件
+    marker.on('click', function(e) {
+        console.log(e);
+        mypop.setLatLng(e.latlng)
+            .setContent('o(≧口≦)o').openOn(mymap);
+    })
+
+</script>
+</body>
+</html>
